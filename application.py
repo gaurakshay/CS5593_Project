@@ -18,10 +18,13 @@ class Application(Frame):
         self.create_widgets()
 
     def create_widgets(self):
-        self.load_but = Button(self, text='Load file', command=self.load_file)
+        self.load_but = Button(self, text='Load CSV file with up to 40 rows', command=self.load_file)
         self.load_but.pack(side=TOP, padx=5, pady=5)
         self.anlyz_but = Button(self, text='Analyze', command = self.analyze_data)  # add command to this button
         self.anlyz_but.pack(side=TOP, padx=5, pady=5)
+        self.content_wrapper = Frame(self)
+        self.content_wrapper.pack(expand=1, fill=BOTH)
+
 
     def analyze_data(self):
         if not self.filename:
@@ -41,12 +44,16 @@ class Application(Frame):
 
         nrow = len(data) if len(data) < 40 else 40
         ncol = len(data[0])
-        self.table_f = Frame(self, bg='black')
-        self.table_f.pack(side=BOTTOM)
+        self.table_f = Frame(self.content_wrapper, bg='black')
+        # self.table_f.pack()
+        self.table_f.grid(row=0, column=0, sticky='nsew')
         for row in range(nrow):
             for col in range(ncol):
                 label = Label(self.table_f, text=data[row][col])
-                label.grid(row=row, column=col, sticky='nsew', padx=1, pady=1)
+                label.grid(row=row, column=col, sticky='nsew', padx=1, pady=1, ipadx=1, ipady=1)
+            predicted_text = "Yes" if row > 0 else "Predicted to be viable?"
+            label = Label(self.table_f, text=predicted_text)
+            label.grid(row=row, column = ncol, sticky='nsew', padx=1, pady=1, ipadx=1, ipady=1)
 
 
     def create_table(self, filename):
