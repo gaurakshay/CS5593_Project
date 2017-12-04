@@ -102,6 +102,9 @@ class Node:
 
     records = property(get_records, set_records)
 
+    def scale(data):
+        return(data - data.mean() / data.std())
+
     # Always use the first column of the data frame for splitting each node's
     # records.
     #

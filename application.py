@@ -2,6 +2,7 @@
 
 from tkinter import *
 import tkinter.filedialog as fd
+import tkinter.simpledialog as tksd
 import csv
 import pandas as pandas
 # from ggplot import *
@@ -51,18 +52,21 @@ class Application(Frame):
         if not filename:
             return
 
+        max_depth = tksd.askinteger("Max decision tree depth", "Enter a max tree depth between 2 and 6:")
+
+        self.train_but.config(text="Training...")
+        self.train_but.pack()
+
         records = pandas.read_csv(filename)
-        self.model = Node(records, 4, 10)
+        self.model = Node(records, max_depth if max_depth <= 6 and max_depth > 1 else 4, 10)
+
+        self.train_but.config(text="Train model")
+        self.train_but.pack()
+
         try:
             pickle.dump(self.model, open(serialized_file_name, "wb"))
         except:
             pass
-
-
-    # def create_visualization_from_df(df):
-    #     ggplot(df, aes(x=('open', 'close', 'high'), fill='cut'))
-    #     geom_density(alpha = .25) +\
-    #     facet_wrap('clarity')
 
     def analyze_data(self):
         if not self.filename:
@@ -75,12 +79,6 @@ class Application(Frame):
         applied_df = pandas.concat([df, df.apply(self.model.predict, axis = 1)], axis=1)
         print(applied_df.values.tolist())
         self.create_table_from_list([list(applied_df) + ["Chance of being viable"]] + applied_df.values.tolist())
-        # Pass into implementation
-        # predicted_df = implementation(df)
-
-        # predicted_list = predicted_df.values.tolist()
-        # self.create_table_from_list(predicted_list)
-        # self.create_visualization_from_df(df)
 
 
     def create_table_from_list(self, data):
@@ -96,9 +94,6 @@ class Application(Frame):
             for col in range(ncol):
                 label = Label(self.table_f, text=data[row][col]) if not (row == 0 and col == ncol - 1) else Label(self.table_f, text="Confidence in viability")
                 label.grid(row=row, column=col, sticky='nsew', padx=1, pady=1, ipadx=1, ipady=1)
-            # predicted_text = "Yes" if row > 0 else "Predicted to be viable?"
-            # label = Label(self.table_f, text=predicted_text)
-            # label.grid(row=row, column = ncol, sticky='nsew', padx=1, pady=1, ipadx=1, ipady=1)
 
 
     def create_table(self, filename):
