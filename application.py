@@ -53,15 +53,9 @@ class Application(Frame):
             return
 
         max_depth = tksd.askinteger("Max decision tree depth", "Enter a max tree depth between 2 and 6:")
-
-        self.train_but.config(text="Training...")
-        self.train_but.pack()
-
+        
         records = pandas.read_csv(filename)
         self.model = Node(records, max_depth if max_depth <= 6 and max_depth > 1 else 4, 10)
-
-        self.train_but.config(text="Train model")
-        self.train_but.pack()
 
         try:
             pickle.dump(self.model, open(serialized_file_name, "wb"))
