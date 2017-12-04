@@ -14,20 +14,20 @@ class Application(Frame):
         self.root = master
         super().__init__(master)
         self.pack(fill=BOTH, expand=True, padx=10, pady=10)
-        self.load_but = None
-        self.analyze_but = None
-        self.data = None
-        self.table_f = None
-        self.status = None
-        self.header_ch = None
-        self.header = None
-        self.res_lab = None
+        self.load_but = None  # Load Button
+        self.analyze_but = None  # Analyze Button
+        self.data = None  # Variable to store data from file.
+        self.table_f = None  # Frame to hold the tabular data.
+        self.status = None  # Label that shows the current status of the app.
+        self.header_ch = None  # Checkbox to specify whether header exists or not.
+        self.header = None  # Variable to access checkbox value.
+        self.res_lab = None  # Label to show the results.
         self.create_widgets()
 
     def create_widgets(self):
         self.status = Label(self.root, bd=1, text='Pick a file to start.', relief=SUNKEN, anchor=W)
         self.status.pack(side=BOTTOM, fill=X)
-        bot_frame = Frame(self)
+        bot_frame = Frame(self)  # Frame to hold the load and analyze buttons.
         bot_frame.pack(side=BOTTOM, fill=X)
         self.analyze_but = Button(bot_frame, text='Analyze', state='disabled', command=self.analyze_data)  # add command to this button
         self.analyze_but.pack(side=RIGHT, padx=5)
@@ -63,6 +63,7 @@ class Application(Frame):
 
     def load_data(self, filename):
         self.data = list()
+        # read data as list of lists or any other format.
         with open(filename, 'r') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
@@ -128,7 +129,7 @@ class Application(Frame):
 def main():
     """
     This will be called when the program starts.
-    :return:
+    :return: NA
     """
     root = Tk()
     root.title('CS 5593 Project')
